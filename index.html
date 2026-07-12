@@ -36,25 +36,25 @@
         },
         colors: {
           surface: {
-            DEFAULT: '#131313',
-            dim: '#131313',
-            bright: '#3a3939',
-            lowest: '#0e0e0e',
-            low: '#1c1b1b',
-            container: '#201f1f',
-            high: '#2a2a2a',
-            highest: '#353534',
+            DEFAULT: 'var(--surface)',
+            dim: 'var(--surface-dim)',
+            bright: 'var(--surface-bright)',
+            lowest: 'var(--surface-lowest)',
+            low: 'var(--surface-low)',
+            container: 'var(--surface-container)',
+            high: 'var(--surface-container-high)',
+            highest: 'var(--surface-container-highest)',
           },
-          onsurface: { DEFAULT: '#e5e2e1', variant: '#bbcabf' },
-          outline: { DEFAULT: '#86948a', variant: '#3c4a42' },
+          onsurface: { DEFAULT: 'var(--text)', variant: 'var(--text-variant)' },
+          outline: { DEFAULT: 'var(--outline)', variant: 'var(--outline-variant)' },
           primary: {
-            DEFAULT: '#4edea3',
-            container: '#10b981',
-            fixed: '#6ffbbe',
+            DEFAULT: 'var(--primary)',
+            container: 'var(--primary-container)',
+            fixed: 'var(--primary-fixed)',
           },
-          onprimary: { DEFAULT: '#003824', container: '#00422b' },
-          secondary: { DEFAULT: '#80d5cb', container: '#007068' },
-          onsecondary: { DEFAULT: '#003733', container: '#9af0e5' },
+          onprimary: { DEFAULT: 'var(--on-primary)', container: 'var(--on-primary-container)' },
+          secondary: { DEFAULT: 'var(--secondary)', container: 'var(--secondary-container)' },
+          onsecondary: { DEFAULT: 'var(--on-secondary)', container: 'var(--on-secondary-container)' },
         },
         borderRadius: {
           DEFAULT: '0.5rem',
@@ -62,35 +62,111 @@
           lg: '1rem',
           xl: '1.5rem',
         },
-        boxShadow: {
-          glow: '0 0 0 1px #ffffff10, 0 40px 80px -20px rgba(0,0,0,0.4)',
-          'inner-glow': 'inset 0 1px 0 0 rgba(255,255,255,0.1)',
-        },
       },
     },
   };
 </script>
 
 <style>
-  body { background-color: #0a0a0a; }
-  .glass-border { border: 1px solid #ffffff10; }
-  .inner-glow { box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.08); }
-  .gradient-primary { background: linear-gradient(135deg, #10b981 0%, #0f766e 100%); }
-  .text-gradient { background: linear-gradient(135deg, #6ffbbe 0%, #80d5cb 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .backdrop-nav { backdrop-filter: blur(20px); background-color: rgba(10,10,10,0.7); }
+  :root {
+    --page-bg: #ffffff;
+    --surface: #ffffff;
+    --surface-dim: #f9fafb;
+    --surface-bright: #e5e7eb;
+    --surface-lowest: #f9fafb;
+    --surface-low: #f3f4f6;
+    --surface-container: #f3f4f6;
+    --surface-container-high: #e5e7eb;
+    --surface-container-highest: #d1d5db;
+    --text: #111827;
+    --text-variant: #4b5563;
+    --inverse-surface: #111827;
+    --inverse-text: #f9fafb;
+    --outline: #d1d5db;
+    --outline-variant: #e5e7eb;
+    --primary: #10b981;
+    --primary-container: #10b981;
+    --primary-fixed: #059669;
+    --on-primary: #ffffff;
+    --on-primary-container: #ffffff;
+    --secondary: #0f766e;
+    --secondary-container: #ccfbf1;
+    --on-secondary: #ffffff;
+    --on-secondary-container: #0f766e;
+    --glass-border: rgba(0,0,0,0.08);
+    --glass-bg: rgba(0,0,0,0.03);
+    --primary-soft: rgba(16,185,129,0.12);
+    --secondary-soft: rgba(15,118,110,0.12);
+    --secondary-container-soft: rgba(15,118,110,0.12);
+    --inner-glow: inset 0 1px 0 0 rgba(255,255,255,0.5);
+    --gradient-from: #10b981;
+    --gradient-to: #0f766e;
+    --backdrop-nav: rgba(255,255,255,0.8);
+    --tick-grid: rgba(0,0,0,0.06);
+    --shadow-glow: 0 0 0 1px rgba(0,0,0,0.05), 0 40px 80px -20px rgba(0,0,0,0.08);
+  }
+  :root.dark {
+    --page-bg: #0a0a0a;
+    --surface: #131313;
+    --surface-dim: #131313;
+    --surface-bright: #3a3939;
+    --surface-lowest: #0e0e0e;
+    --surface-low: #1c1b1b;
+    --surface-container: #201f1f;
+    --surface-container-high: #2a2a2a;
+    --surface-container-highest: #353534;
+    --text: #e5e2e1;
+    --text-variant: #bbcabf;
+    --inverse-surface: #e5e2e1;
+    --inverse-text: #313030;
+    --outline: #86948a;
+    --outline-variant: #3c4a42;
+    --primary: #4edea3;
+    --primary-container: #10b981;
+    --primary-fixed: #6ffbbe;
+    --on-primary: #003824;
+    --on-primary-container: #00422b;
+    --secondary: #80d5cb;
+    --secondary-container: #007068;
+    --on-secondary: #003733;
+    --on-secondary-container: #9af0e5;
+    --glass-border: rgba(255,255,255,0.06);
+    --glass-bg: rgba(255,255,255,0.03);
+    --primary-soft: rgba(78,222,163,0.15);
+    --secondary-soft: rgba(128,213,203,0.15);
+    --secondary-container-soft: rgba(128,213,203,0.20);
+    --inner-glow: inset 0 1px 0 0 rgba(255,255,255,0.08);
+    --gradient-from: #10b981;
+    --gradient-to: #0f766e;
+    --backdrop-nav: rgba(10,10,10,0.7);
+    --tick-grid: rgba(255,255,255,0.05);
+    --shadow-glow: 0 0 0 1px rgba(255,255,255,0.06), 0 40px 80px -20px rgba(0,0,0,0.4);
+  }
+  body { background-color: var(--page-bg); color: var(--text); }
+  .glass-border { border: 1px solid var(--glass-border); }
+  .inner-glow { box-shadow: var(--inner-glow); }
+  .gradient-primary { background: linear-gradient(135deg, var(--gradient-from) 0%, var(--gradient-to) 100%); }
+  .text-gradient { background: linear-gradient(135deg, var(--primary-fixed) 0%, var(--secondary) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .backdrop-nav { backdrop-filter: blur(20px); background-color: var(--backdrop-nav); }
+  .shadow-glow { box-shadow: var(--shadow-glow); }
+  .bg-primary-soft { background-color: var(--primary-soft); }
+  .bg-secondary-soft { background-color: var(--secondary-soft); }
+  .bg-secondary-container-soft { background-color: var(--secondary-container-soft); }
+  .bg-glass { background-color: var(--glass-bg); }
+  .border-glass { border-color: var(--glass-border); }
   details > summary { list-style: none; }
   details > summary::-webkit-details-marker { display: none; }
   details summary .chev { transition: transform 0.2s ease; }
   details[open] summary .chev { transform: rotate(180deg); }
-  .tick-grid { background-image: radial-gradient(circle at 1px 1px, #ffffff0d 1px, transparent 0); background-size: 24px 24px; }
+  .tick-grid { background-image: radial-gradient(circle at 1px 1px, var(--tick-grid) 1px, transparent 0); background-size: 24px 24px; }
 </style>
 </head>
-<body class="bg-[#0a0a0a] text-onsurface font-sans antialiased">
+<body class="text-onsurface font-sans antialiased">
 
 <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-primary focus:text-onprimary focus:px-4 focus:py-2 focus:rounded-md">Ir para o conteúdo</a>
 
 <!-- NAV -->
-<header class="fixed top-0 inset-x-0 z-40 backdrop-nav border-b border-white/10">
+<header class="fixed top-0 inset-x-0 z-40 backdrop-nav border-b border-glass">
   <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-20 h-16 flex items-center justify-between">
     <a href="#main" class="flex items-center gap-2 font-bold text-lg tracking-tight text-onsurface">
       <img src="icon.png" alt="Ícone do Adoo" width="32" height="32" class="w-8 h-8 rounded-md" />
@@ -116,10 +192,10 @@
 
   <!-- HERO -->
   <section class="relative overflow-hidden tick-grid pt-40 pb-24 sm:pt-48 sm:pb-32 px-4 sm:px-6 lg:px-20">
-    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-primary/10 via-transparent to-transparent"></div>
+    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-primary/20 via-transparent to-transparent"></div>
     <div class="mx-auto max-w-7xl grid lg:grid-cols-2 gap-16 items-center">
       <div>
-        <span class="inline-flex items-center gap-2 rounded-full glass-border px-3 py-1 text-xs font-semibold tracking-wide uppercase text-secondary bg-white/5">
+        <span class="inline-flex items-center gap-2 rounded-full glass-border px-3 py-1 text-xs font-semibold tracking-wide uppercase text-secondary bg-glass">
           Offline-first · Seguro · Preciso
         </span>
         <h1 class="mt-6 text-4xl sm:text-5xl lg:text-[3.4rem] font-bold leading-[1.05] tracking-tighter text-onsurface">
@@ -149,14 +225,14 @@
       </div>
 
       <div class="relative">
-        <div class="absolute -inset-6 rounded-[2rem] bg-primary/10 blur-3xl"></div>
+        <div class="absolute -inset-6 rounded-[2rem] bg-primary-soft blur-3xl"></div>
         <div class="relative rounded-xl glass-border bg-surface-container inner-glow p-6 shadow-glow">
           <div class="flex items-center justify-between mb-6">
             <div>
               <p class="text-xs uppercase tracking-widest text-onsurface-variant font-medium">Saldo Geral</p>
               <p class="mt-1 text-3xl font-bold tracking-tight text-onsurface">R$ 48.230,12</p>
             </div>
-            <span class="rounded-full bg-secondary-container/20 text-secondary text-xs font-semibold px-3 py-1">+12,4%</span>
+            <span class="rounded-full bg-secondary-container-soft text-secondary text-xs font-semibold px-3 py-1">+12,4%</span>
           </div>
           <div class="grid grid-cols-2 gap-3 mb-6">
             <div class="rounded-md bg-surface-container-high glass-border p-4">
@@ -169,16 +245,16 @@
             </div>
           </div>
           <div class="space-y-3">
-            <div class="flex items-center justify-between border-t border-white/5 pt-3">
+            <div class="flex items-center justify-between border-t border-glass pt-3">
               <div class="flex items-center gap-3">
-                <span class="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center text-primary text-xs font-bold">C</span>
+                <span class="w-8 h-8 rounded-full bg-primary-soft flex items-center justify-center text-primary text-xs font-bold">C</span>
                 <span class="text-sm text-onsurface">Cartão Nubank</span>
               </div>
               <span class="text-sm font-medium text-onsurface-variant">-R$ 890,00</span>
             </div>
-            <div class="flex items-center justify-between border-t border-white/5 pt-3">
+            <div class="flex items-center justify-between border-t border-glass pt-3">
               <div class="flex items-center gap-3">
-                <span class="w-8 h-8 rounded-full bg-secondary/15 flex items-center justify-center text-secondary text-xs font-bold">S</span>
+                <span class="w-8 h-8 rounded-full bg-secondary-soft flex items-center justify-center text-secondary text-xs font-bold">S</span>
                 <span class="text-sm text-onsurface">Salário</span>
               </div>
               <span class="text-sm font-medium text-primary">+R$ 9.800,00</span>
@@ -190,7 +266,7 @@
   </section>
 
   <!-- LOGOS / SOCIAL PROOF STRIP -->
-  <section class="border-y border-white/5 bg-surface-container-lowest py-8 px-4 sm:px-6 lg:px-20">
+  <section class="border-y border-glass bg-surface-container-lowest py-8 px-4 sm:px-6 lg:px-20">
     <div class="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
       <p class="text-sm text-onsurface-variant">Integrado com as principais instituições via Open Finance</p>
       <div class="flex items-center gap-8 text-onsurface-variant/70 text-sm font-medium flex-wrap justify-center">
@@ -210,7 +286,7 @@
       <div class="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
         <div class="rounded-xl glass-border bg-surface-container p-6 inner-glow hover:border-primary/40 transition-colors">
-          <div class="w-11 h-11 rounded-md bg-primary/15 flex items-center justify-center text-primary mb-4">
+          <div class="w-11 h-11 rounded-md bg-primary-soft flex items-center justify-center text-primary mb-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
           </div>
           <h3 class="text-lg font-semibold text-onsurface">Contas ilimitadas</h3>
@@ -218,7 +294,7 @@
         </div>
 
         <div class="rounded-xl glass-border bg-surface-container p-6 inner-glow hover:border-primary/40 transition-colors">
-          <div class="w-11 h-11 rounded-md bg-primary/15 flex items-center justify-center text-primary mb-4">
+          <div class="w-11 h-11 rounded-md bg-primary-soft flex items-center justify-center text-primary mb-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V6m0 10v2"/></svg>
           </div>
           <h3 class="text-lg font-semibold text-onsurface">Cartões de crédito</h3>
@@ -226,7 +302,7 @@
         </div>
 
         <div class="rounded-xl glass-border bg-surface-container p-6 inner-glow hover:border-primary/40 transition-colors">
-          <div class="w-11 h-11 rounded-md bg-primary/15 flex items-center justify-center text-primary mb-4">
+          <div class="w-11 h-11 rounded-md bg-primary-soft flex items-center justify-center text-primary mb-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
           </div>
           <h3 class="text-lg font-semibold text-onsurface">Orçamentos por categoria</h3>
@@ -234,7 +310,7 @@
         </div>
 
         <div class="rounded-xl glass-border bg-surface-container p-6 inner-glow hover:border-primary/40 transition-colors">
-          <div class="w-11 h-11 rounded-md bg-primary/15 flex items-center justify-center text-primary mb-4">
+          <div class="w-11 h-11 rounded-md bg-primary-soft flex items-center justify-center text-primary mb-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0H5m14 0h2M5 21H3m14-10H9m10 0h.01M9 11h.01M9 15h.01M9 19h.01M13 15h.01M13 11h.01M13 19h.01M17 15h.01M17 11h.01M17 19h.01"/></svg>
           </div>
           <h3 class="text-lg font-semibold text-onsurface">Conexão com bancos</h3>
@@ -242,7 +318,7 @@
         </div>
 
         <div class="rounded-xl glass-border bg-surface-container p-6 inner-glow hover:border-primary/40 transition-colors">
-          <div class="w-11 h-11 rounded-md bg-primary/15 flex items-center justify-center text-primary mb-4">
+          <div class="w-11 h-11 rounded-md bg-primary-soft flex items-center justify-center text-primary mb-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-1a4 4 0 00-3-3.87M9 20H4v-1a4 4 0 013-3.87m6-1a4 4 0 100-8 4 4 0 000 8zm6 3v-1a4 4 0 00-3-3.87m-8 0A4 4 0 003 17v1"/></svg>
           </div>
           <h3 class="text-lg font-semibold text-onsurface">Contas compartilhadas</h3>
@@ -250,7 +326,7 @@
         </div>
 
         <div class="rounded-xl glass-border bg-surface-container p-6 inner-glow hover:border-primary/40 transition-colors">
-          <div class="w-11 h-11 rounded-md bg-primary/15 flex items-center justify-center text-primary mb-4">
+          <div class="w-11 h-11 rounded-md bg-primary-soft flex items-center justify-center text-primary mb-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/></svg>
           </div>
           <h3 class="text-lg font-semibold text-onsurface">Análises e dashboard</h3>
@@ -262,7 +338,7 @@
   </section>
 
   <!-- SECURITY / OFFLINE-FIRST -->
-  <section id="seguranca" class="py-24 px-4 sm:px-6 lg:px-20 bg-surface-container-lowest border-y border-white/5">
+  <section id="seguranca" class="py-24 px-4 sm:px-6 lg:px-20 bg-surface-container-lowest border-y border-glass">
     <div class="mx-auto max-w-7xl grid lg:grid-cols-2 gap-16 items-center">
       <div>
         <span class="text-xs font-semibold tracking-widest uppercase text-secondary">Arquitetura offline-first</span>
@@ -286,7 +362,7 @@
         </ul>
       </div>
       <div class="relative">
-        <div class="absolute -inset-6 rounded-[2rem] bg-secondary/10 blur-3xl"></div>
+        <div class="absolute -inset-6 rounded-[2rem] bg-secondary-soft blur-3xl"></div>
         <div class="relative rounded-xl glass-border bg-surface-container inner-glow p-8 shadow-glow">
           <div class="flex items-center gap-2 mb-6">
             <span class="w-2 h-2 rounded-full bg-primary"></span>
@@ -340,7 +416,7 @@
   </section>
 
   <!-- PRICING -->
-  <section id="planos" class="py-24 px-4 sm:px-6 lg:px-20 bg-surface-container-lowest border-y border-white/5">
+  <section id="planos" class="py-24 px-4 sm:px-6 lg:px-20 bg-surface-container-lowest border-y border-glass">
     <div class="mx-auto max-w-7xl">
       <div class="text-center max-w-2xl mx-auto">
         <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-onsurface">Planos simples e transparentes</h2>
@@ -473,15 +549,15 @@
 </main>
 
 <!-- FOOTER -->
-<footer class="border-t border-white/5 bg-surface-container-lowest px-4 sm:px-6 lg:px-20 py-12">
+<footer class="border-t border-glass bg-surface-container-lowest px-4 sm:px-6 lg:px-20 py-12">
   <div class="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-6">
     <div class="flex items-center gap-2 font-bold text-onsurface">
       <img src="icon.png" alt="Ícone do Adoo" width="28" height="28" class="w-7 h-7 rounded-md" />
       Adoo
     </div>
     <div class="flex items-center gap-6 text-sm text-onsurface-variant">
-      <a href="#" class="hover:text-primary transition-colors">Privacidade</a>
-      <a href="#" class="hover:text-primary transition-colors">Termos</a>
+      <a href="https://luishenriquejung.github.io/gestor-financeiro-politicas/#privacidade" class="hover:text-primary transition-colors">Privacidade</a>
+      <a href="https://luishenriquejung.github.io/gestor-financeiro-politicas/#termos" class="hover:text-primary transition-colors">Termos</a>
       <a href="mailto:contato@adoo.app" class="hover:text-primary transition-colors">Contato</a>
     </div>
     <p class="text-sm text-onsurface-variant">© <span id="year"></span> Adoo. Todos os direitos reservados.</p>
