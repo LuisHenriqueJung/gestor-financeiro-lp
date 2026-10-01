@@ -182,7 +182,7 @@
     h.innerHTML = words.map(w => `<span class="sw" style="display:inline-block">${w}</span>`).join(' ');
     gsap.fromTo($$('.sw', h), { opacity: 0.12, y: 18, filter: 'blur(6px)' }, {
       opacity: 1, y: 0, filter: 'blur(0px)', stagger: 0.12, ease: 'none',
-      scrollTrigger: { trigger: h, start: 'top 88%', end: 'top 45%', scrub: 0.6 },
+      scrollTrigger: { trigger: h, start: 'clamp(top 88%)', end: 'clamp(top 45%)', scrub: 0.6 },
     });
   });
 
@@ -195,7 +195,7 @@
   /* ---------- Demo reel: tilted screen that straightens and grows ---------- */
   gsap.fromTo('#reel', { scale: 0.72, rotateX: 32, y: 80, borderRadius: 56, opacity: 0.4 }, {
     scale: 1, rotateX: 0, y: 0, borderRadius: 28, opacity: 1, ease: 'none',
-    scrollTrigger: { trigger: '.reel-stage', start: 'top 95%', end: 'top 15%', scrub: 1 },
+    scrollTrigger: { trigger: '.reel-stage', start: 'clamp(top 95%)', end: 'clamp(top 15%)', scrub: 1 },
   });
 
   /* ---------- Features: cards flip up in a wave ---------- */
@@ -208,7 +208,7 @@
   /* ---------- Contrast sections unfold from an inset card ---------- */
   ['#seguranca', '#planos'].forEach(sel => gsap.fromTo(sel,
     { clipPath: 'inset(6% 5% 6% 5% round 48px)' },
-    { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'none', scrollTrigger: { trigger: sel, start: 'top 95%', end: 'top 25%', scrub: true } }));
+    { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'none', scrollTrigger: { trigger: sel, start: 'clamp(top 95%)', end: 'clamp(top 25%)', scrub: true } }));
 
   /* ---------- Security ---------- */
   gsap.from('.sec-list li', { x: -60, opacity: 0, duration: 0.8, stagger: 0.12, ease: 'expo.out', scrollTrigger: { trigger: '.sec-list', start: 'top 85%' } });
