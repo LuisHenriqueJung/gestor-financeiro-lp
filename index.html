@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="scroll-smooth dark">
+<html lang="pt-BR" class="dark">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -159,20 +159,157 @@
   details summary .chev { transition: transform 0.2s ease; }
   details[open] summary .chev { transform: rotate(180deg); }
   .tick-grid { background-image: radial-gradient(circle at 1px 1px, var(--tick-grid) 1px, transparent 0); background-size: 24px 24px; }
+
+  /* ================= Motion layer ================= */
+  @property --angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+  .lenis.lenis-smooth iframe { pointer-events: none; }
+  body { overflow-x: clip; }
+
+  /* Intro loader */
+  #loader { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; pointer-events: none; animation: loaderFallback .6s ease 3.2s forwards; }
+  #loader .panel { position: absolute; left: 0; right: 0; height: 50.5%; background: #0a0a0a; }
+  #loader .panel.top { top: 0; } #loader .panel.bot { bottom: 0; }
+  #loader .mark { position: relative; z-index: 2; display: flex; align-items: center; gap: 18px; color: #e5e2e1; font-weight: 800; font-size: clamp(48px, 9vw, 96px); letter-spacing: -0.06em; }
+  #loader .mark img { width: clamp(56px, 9vw, 96px); height: clamp(56px, 9vw, 96px); border-radius: 26%; box-shadow: 0 0 80px rgba(16,185,129,.6); }
+  #loader .mark span { display: inline-block; }
+  #loader .bar { position: absolute; z-index: 2; left: 50%; top: calc(50% + 80px); width: 160px; height: 2px; margin-left: -80px; background: rgba(255,255,255,.08); overflow: hidden; border-radius: 2px; }
+  #loader .bar i { position: absolute; inset: 0; background: linear-gradient(90deg, #10b981, #80d5cb); transform-origin: left; transform: scaleX(0); box-shadow: 0 0 12px #4edea3; }
+  @keyframes loaderFallback { to { opacity: 0; visibility: hidden; } }
+  html.no-loader #loader { display: none; }
+  /* Hero is hidden until main.js has set its entrance states (fallback reveals it if JS never runs). */
+  html.motion .hero-copy, html.motion .hero-visual { visibility: hidden; animation: motionFallback 0s 3.5s forwards; }
+  @keyframes motionFallback { to { visibility: visible; } }
+
+  /* Scroll progress */
+  #progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 60; transform-origin: left; transform: scaleX(0); background: linear-gradient(90deg, var(--gradient-from), var(--secondary)); box-shadow: 0 0 12px var(--primary); }
+
+  /* Header hide/show */
+  header.site { transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+  header.site.is-hidden { transform: translateY(-100%); }
+
+  /* Film grain */
+  .grain { position: fixed; inset: -50%; z-index: 70; pointer-events: none; opacity: .045; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); animation: grain 1s steps(6) infinite; }
+  :root:not(.dark) .grain { opacity: .03; }
+  @keyframes grain { 0%,100% { transform: translate(0,0); } 20% { transform: translate(-5%,3%); } 40% { transform: translate(3%,-6%); } 60% { transform: translate(-7%,-2%); } 80% { transform: translate(6%,5%); } }
+
+  /* Hero aurora + cursor spotlight */
+  .aurora { position: absolute; inset: 0; z-index: -10; overflow: hidden; pointer-events: none; }
+  .aurora i { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .55; mix-blend-mode: screen; }
+  :root:not(.dark) .aurora i { mix-blend-mode: multiply; opacity: .35; }
+  .aurora i:nth-child(1) { width: 52vw; height: 52vw; left: -12vw; top: -20vw; background: radial-gradient(circle, var(--gradient-from), transparent 65%); animation: drift1 18s ease-in-out infinite alternate; }
+  .aurora i:nth-child(2) { width: 46vw; height: 46vw; right: -14vw; top: -6vw; background: radial-gradient(circle, var(--gradient-to), transparent 65%); animation: drift2 22s ease-in-out infinite alternate; }
+  .aurora i:nth-child(3) { width: 36vw; height: 36vw; left: 30vw; bottom: -22vw; background: radial-gradient(circle, var(--secondary), transparent 65%); opacity: .3; animation: drift3 26s ease-in-out infinite alternate; }
+  @keyframes drift1 { to { transform: translate(18vw, 10vw) scale(1.15); } }
+  @keyframes drift2 { to { transform: translate(-16vw, 14vw) scale(.9); } }
+  @keyframes drift3 { to { transform: translate(-20vw, -12vw) scale(1.2); } }
+  .spotlight { position: absolute; inset: 0; z-index: -5; pointer-events: none; background: radial-gradient(600px circle at var(--mx, 50%) var(--my, 30%), var(--primary-soft), transparent 60%); }
+  .tick-grid-spot { position: absolute; inset: 0; z-index: -6; pointer-events: none; background-image: radial-gradient(circle at 1px 1px, var(--primary) 1px, transparent 0); background-size: 24px 24px; opacity: .35; -webkit-mask-image: radial-gradient(260px circle at var(--mx, 50%) var(--my, 30%), #000, transparent 70%); mask-image: radial-gradient(260px circle at var(--mx, 50%) var(--my, 30%), #000, transparent 70%); }
+
+  /* Animated gradient text */
+  .text-gradient.shimmer { background-image: linear-gradient(110deg, var(--primary-fixed) 0%, var(--secondary) 30%, var(--primary-fixed) 50%, var(--secondary) 70%, var(--primary-fixed) 100%); background-size: 250% 100%; animation: shimmer 6s linear infinite; }
+  @keyframes shimmer { to { background-position: -250% 0; } }
+
+  /* Split-word masks */
+  .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .08em; margin-bottom: -.08em; }
+  .wi { display: inline-block; will-change: transform; }
+
+  /* Hero card 3D */
+  .tilt-wrap { perspective: 1200px; }
+  .tilt { transform-style: preserve-3d; will-change: transform; }
+  .tilt .pop { transform: translateZ(40px); }
+  .float { animation: float 6s ease-in-out infinite; }
+  @keyframes float { 50% { transform: translateY(-14px); } }
+
+  /* Marquee */
+  .marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .marquee-track { display: flex; width: max-content; animation: marquee 40s linear infinite; }
+  .marquee.reverse .marquee-track { animation-direction: reverse; animation-duration: 48s; }
+  .marquee-track > * { flex: none; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+
+  /* Video showcase */
+  .reel-stage { perspective: 1600px; }
+  .reel-frame { transform-origin: 50% 0%; will-change: transform; position: relative; overflow: hidden; border-radius: 28px; box-shadow: 0 0 0 1px var(--glass-border), 0 60px 120px -30px rgba(0,0,0,.6), 0 0 160px -40px rgba(16,185,129,.45); background: #0a0a0a; }
+  .reel-frame video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+  .reel-frame.tall video { aspect-ratio: 9 / 16; }
+  .reel-frame::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; box-shadow: inset 0 1px 0 rgba(255,255,255,.12); }
+  .reel-sound { position: absolute; right: 16px; bottom: 16px; z-index: 2; display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; color: #e5e2e1; background: rgba(10,10,10,.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.12); cursor: pointer; transition: background .2s; }
+  .reel-sound:hover { background: rgba(16,185,129,.35); }
+  .reel-sound .eq { display: inline-flex; gap: 2px; align-items: end; height: 12px; }
+  .reel-sound .eq i { width: 2px; height: 4px; background: #4edea3; border-radius: 1px; }
+  .reel-sound.on .eq i { animation: eq .8s ease-in-out infinite; }
+  .reel-sound.on .eq i:nth-child(2) { animation-delay: .2s; } .reel-sound.on .eq i:nth-child(3) { animation-delay: .4s; }
+  @keyframes eq { 50% { height: 12px; } }
+
+  /* Spotlight-border cards */
+  .spot { position: relative; isolation: isolate; }
+  .spot::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; background: radial-gradient(320px circle at var(--x, 50%) var(--y, 50%), var(--primary), transparent 45%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity .35s; pointer-events: none; }
+  .spot::after { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: radial-gradient(400px circle at var(--x, 50%) var(--y, 50%), var(--primary-soft), transparent 45%); opacity: 0; transition: opacity .35s; pointer-events: none; }
+  .spot:hover::before, .spot:hover::after { opacity: 1; }
+  .spot .icon { transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+  .spot:hover .icon { transform: rotate(-8deg) scale(1.12); }
+
+  /* Rotating conic border (Pro plan) */
+  .conic { position: relative; isolation: isolate; border: 0 !important; }
+  .conic::before { content: ""; position: absolute; inset: -2px; z-index: -2; border-radius: calc(1.5rem + 2px); background: conic-gradient(from var(--angle), var(--primary) 0deg, transparent 90deg, transparent 180deg, var(--secondary) 270deg, var(--primary) 360deg); animation: spinAngle 4s linear infinite; }
+  .conic::after { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 1.5rem; background: var(--surface-container); }
+  @keyframes spinAngle { to { --angle: 360deg; } }
+
+  /* Status pulse */
+  .ping { position: relative; } .ping::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--primary); animation: ping 1.8s cubic-bezier(0,0,.2,1) infinite; }
+  @keyframes ping { 75%, 100% { transform: scale(3); opacity: 0; } }
+  .spin-slow { animation: spin 3s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Giant outline word */
+  .giant { font-size: clamp(120px, 24vw, 380px); font-weight: 800; letter-spacing: -0.07em; line-height: .8; white-space: nowrap; color: transparent; -webkit-text-stroke: 1px var(--glass-border); }
+  :root.dark .giant { -webkit-text-stroke: 1px rgba(255,255,255,.07); }
+  .giant .fill { color: var(--primary); opacity: .08; -webkit-text-stroke: 0; }
+
+  /* FAQ smooth open (height animated in main.js) */
+  details .answer { overflow: hidden; }
+
+  /* Theme toggle circular reveal (View Transitions) */
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+    #loader, .grain { display: none !important; }
+  }
 </style>
 </head>
 <body class="text-onsurface font-sans antialiased">
 
+<!-- Intro loader (skipped on repeat visits / reduced motion) -->
+<div id="loader" aria-hidden="true">
+  <div class="panel top"></div><div class="panel bot"></div>
+  <div class="mark"><img src="icon.png" alt="" width="96" height="96" /><div><span>A</span><span>d</span><span>o</span><span>o</span></div></div>
+  <div class="bar"><i></i></div>
+</div>
+<script>
+  (function () {
+    var c = document.documentElement.classList, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches, seen = false;
+    try { seen = !!sessionStorage.getItem('adoo-intro'); } catch (e) {}
+    if (seen || reduce) c.add('no-loader');
+    if (!reduce) c.add('motion');
+  })();
+</script>
+
+<div id="progress" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
 <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-primary focus:text-onprimary focus:px-4 focus:py-2 focus:rounded-md">Ir para o conteúdo</a>
 
 <!-- NAV -->
-<header class="fixed top-0 inset-x-0 z-40 backdrop-nav border-b border-glass">
+<header class="site fixed top-0 inset-x-0 z-40 backdrop-nav border-b border-glass">
   <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-20 h-16 flex items-center justify-between">
     <a href="#main" class="flex items-center gap-2 font-bold text-lg tracking-tight text-onsurface">
       <img src="icon.png" alt="Ícone do Adoo" width="32" height="32" class="w-8 h-8 rounded-md" />
       Adoo
     </a>
     <div class="hidden lg:flex items-center gap-8 text-sm font-medium text-onsurface-variant">
+      <a href="#demo" class="hover:text-primary transition-colors">Demo</a>
       <a href="#recursos" class="hover:text-primary transition-colors">Recursos</a>
       <a href="#seguranca" class="hover:text-primary transition-colors">Segurança</a>
       <a href="#planos" class="hover:text-primary transition-colors">Planos</a>
@@ -183,7 +320,7 @@
         <svg id="icon-sun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.36 6.36l-.7-.7M6.34 6.34l-.7-.7m12.02 0l-.7.7M6.34 17.66l-.7.7M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
         <svg id="icon-moon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 1020.354 15.354z"/></svg>
       </button>
-      <a href="#download" class="hidden sm:inline-flex items-center gap-2 rounded-md gradient-primary inner-glow text-onprimary text-sm font-semibold px-4 py-2 hover:opacity-90 transition-opacity">Baixar o app</a>
+      <a href="#download" class="magnetic hidden sm:inline-flex items-center gap-2 rounded-md gradient-primary inner-glow text-onprimary text-sm font-semibold px-4 py-2 hover:opacity-90 transition-opacity">Baixar o app</a>
     </div>
   </nav>
 </header>
@@ -191,28 +328,33 @@
 <main id="main">
 
   <!-- HERO -->
-  <section class="relative overflow-hidden tick-grid pt-40 pb-24 sm:pt-48 sm:pb-32 px-4 sm:px-6 lg:px-20">
-    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-primary/20 via-transparent to-transparent"></div>
-    <div class="mx-auto max-w-7xl grid lg:grid-cols-2 gap-16 items-center">
-      <div>
-        <span class="inline-flex items-center gap-2 rounded-full glass-border px-3 py-1 text-xs font-semibold tracking-wide uppercase text-secondary bg-glass">
+  <section id="hero" class="relative overflow-hidden isolate tick-grid pt-40 pb-24 sm:pt-48 sm:pb-32 px-4 sm:px-6 lg:px-20 min-h-[100svh] flex items-center">
+    <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="tick-grid-spot" aria-hidden="true"></div>
+    <div class="spotlight" aria-hidden="true"></div>
+    <div class="mx-auto max-w-7xl w-full grid lg:grid-cols-2 gap-16 items-center">
+      <div class="hero-copy">
+        <span data-hero="badge" class="inline-flex items-center gap-2 rounded-full glass-border px-3 py-1 text-xs font-semibold tracking-wide uppercase text-secondary bg-glass">
+          <span class="ping w-1.5 h-1.5 rounded-full bg-primary"></span>
           Offline-first · Seguro · Preciso
         </span>
-        <h1 class="mt-6 text-4xl sm:text-5xl lg:text-[3.4rem] font-bold leading-[1.05] tracking-tighter text-onsurface">
-          Suas finanças, sob <span class="text-gradient">controle absoluto.</span>
+        <h1 class="mt-6 text-5xl sm:text-6xl lg:text-[4.2rem] font-bold leading-[1.02] tracking-tighter text-onsurface">
+          <span class="w"><span class="wi">Suas</span></span> <span class="w"><span class="wi">finanças,</span></span> <span class="w"><span class="wi">sob</span></span>
+          <span class="w"><span class="wi text-gradient shimmer">controle</span></span> <span class="w"><span class="wi text-gradient shimmer">absoluto.</span></span>
         </h1>
-        <p class="mt-6 text-lg text-onsurface-variant max-w-lg leading-relaxed">
+        <p data-hero="fade" class="mt-6 text-lg text-onsurface-variant max-w-lg leading-relaxed">
           Adoo é o tracker financeiro pessoal para quem valoriza precisão, clareza visual e nenhum ruído. Contas, cartões, orçamentos e transações — organizados com a estética de um cofre digital.
         </p>
-        <div class="mt-10 flex flex-wrap items-center gap-4">
-          <a href="https://play.google.com/store/apps/details?id=br.com.jung.gestorfinanceiro" class="inline-flex items-center justify-center rounded-lg gradient-primary inner-glow text-onprimary font-semibold px-6 py-3.5 text-base hover:opacity-90 transition-opacity">
+        <div data-hero="fade" class="mt-10 flex flex-wrap items-center gap-4">
+          <a href="https://play.google.com/store/apps/details?id=br.com.jung.gestorfinanceiro" class="magnetic inline-flex items-center justify-center rounded-lg gradient-primary inner-glow text-onprimary font-semibold px-6 py-3.5 text-base hover:opacity-90 transition-opacity">
             Baixar gratuitamente
           </a>
-          <a href="#recursos" class="inline-flex items-center justify-center rounded-lg glass-border text-onsurface font-semibold px-6 py-3.5 text-base hover:border-primary hover:text-primary transition-colors">
-            Ver recursos
+          <a href="#demo" class="magnetic inline-flex items-center justify-center gap-2 rounded-lg glass-border text-onsurface font-semibold px-6 py-3.5 text-base hover:border-primary hover:text-primary transition-colors">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72a1 1 0 0 0 1.52.85l11.1-6.86a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14z"/></svg>
+            Ver em ação
           </a>
         </div>
-        <div class="mt-10 flex items-center gap-6 text-sm text-onsurface-variant">
+        <div data-hero="fade" class="mt-10 flex items-center gap-6 text-sm text-onsurface-variant">
           <div class="flex items-center gap-2">
             <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             100% offline-first
@@ -224,35 +366,41 @@
         </div>
       </div>
 
-      <div class="relative">
+      <div class="relative tilt-wrap hero-visual">
         <div class="absolute -inset-6 rounded-[2rem] bg-primary-soft blur-3xl"></div>
-        <div class="relative rounded-xl glass-border bg-surface-container inner-glow p-6 shadow-glow">
-          <div class="flex items-center justify-between mb-6">
+        <div class="float">
+        <div id="hero-card" class="tilt relative rounded-xl glass-border bg-surface-container inner-glow p-6 shadow-glow">
+          <div class="pop flex items-center justify-between mb-6">
             <div>
               <p class="text-xs uppercase tracking-widest text-onsurface-variant font-medium">Saldo Geral</p>
-              <p class="mt-1 text-3xl font-bold tracking-tight text-onsurface">R$ 48.230,12</p>
+              <p class="mt-1 text-3xl font-bold tracking-tight text-onsurface tabular-nums">R$ <span data-count="48230.12" data-decimals="2">48.230,12</span></p>
             </div>
             <span class="rounded-full bg-secondary-container-soft text-secondary text-xs font-semibold px-3 py-1">+12,4%</span>
           </div>
-          <div class="grid grid-cols-2 gap-3 mb-6">
+          <svg class="pop w-full h-16 mb-6 overflow-visible" viewBox="0 0 300 60" preserveAspectRatio="none" aria-hidden="true">
+            <defs><linearGradient id="spark-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--primary)" stop-opacity=".3"/><stop offset="1" stop-color="var(--primary)" stop-opacity="0"/></linearGradient></defs>
+            <path id="spark-area" d="M0 50 C30 46 50 38 75 40 S120 26 150 30 S200 14 225 16 S270 6 300 4 L300 60 L0 60 Z" fill="url(#spark-fill)"/>
+            <path id="spark-line" d="M0 50 C30 46 50 38 75 40 S120 26 150 30 S200 14 225 16 S270 6 300 4" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" vector-effect="non-scaling-stroke" style="filter:drop-shadow(0 0 6px var(--primary))"/>
+          </svg>
+          <div class="pop grid grid-cols-2 gap-3 mb-6">
             <div class="rounded-md bg-surface-container-high glass-border p-4">
               <p class="text-xs text-onsurface-variant">Receitas</p>
-              <p class="mt-1 text-lg font-semibold text-primary">R$ 9.800</p>
+              <p class="mt-1 text-lg font-semibold text-primary tabular-nums">R$ <span data-count="9800">9.800</span></p>
             </div>
             <div class="rounded-md bg-surface-container-high glass-border p-4">
               <p class="text-xs text-onsurface-variant">Despesas</p>
-              <p class="mt-1 text-lg font-semibold text-onsurface">R$ 4.120</p>
+              <p class="mt-1 text-lg font-semibold text-onsurface tabular-nums">R$ <span data-count="4120">4.120</span></p>
             </div>
           </div>
           <div class="space-y-3">
-            <div class="flex items-center justify-between border-t border-glass pt-3">
+            <div class="hero-row flex items-center justify-between border-t border-glass pt-3">
               <div class="flex items-center gap-3">
                 <span class="w-8 h-8 rounded-full bg-primary-soft flex items-center justify-center text-primary text-xs font-bold">C</span>
                 <span class="text-sm text-onsurface">Cartão Nubank</span>
               </div>
               <span class="text-sm font-medium text-onsurface-variant">-R$ 890,00</span>
             </div>
-            <div class="flex items-center justify-between border-t border-glass pt-3">
+            <div class="hero-row flex items-center justify-between border-t border-glass pt-3">
               <div class="flex items-center gap-3">
                 <span class="w-8 h-8 rounded-full bg-secondary-soft flex items-center justify-center text-secondary text-xs font-bold">S</span>
                 <span class="text-sm text-onsurface">Salário</span>
@@ -261,16 +409,47 @@
             </div>
           </div>
         </div>
+        </div>
+        <!-- floating chips -->
+        <div class="hero-chip absolute -left-4 sm:-left-8 -top-5 rounded-full glass-border bg-surface-container shadow-glow px-4 py-2 text-xs font-semibold text-onsurface flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-primary"></span>Orçamento em dia</div>
+        <div class="hero-chip absolute -right-3 sm:-right-8 -bottom-5 rounded-full glass-border bg-surface-container shadow-glow px-4 py-2 text-xs font-semibold text-onsurface flex items-center gap-2"><svg class="w-3.5 h-3.5 text-primary spin-slow" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 4v5h5M20 20v-5h-5M5.6 15a7 7 0 0 0 12.3 2M18.4 9A7 7 0 0 0 6.1 7"/></svg>Sincronizado</div>
       </div>
     </div>
   </section>
 
-  <!-- LOGOS / SOCIAL PROOF STRIP -->
-  <section class="border-y border-glass bg-surface-container-lowest py-8 px-4 sm:px-6 lg:px-20">
-    <div class="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-      <p class="text-sm text-onsurface-variant">Integrado com as principais instituições via Open Finance</p>
-      <div class="flex items-center gap-8 text-onsurface-variant/70 text-sm font-medium flex-wrap justify-center">
-        <span>Nubank</span><span>Itaú</span><span>Bradesco</span><span>Banco do Brasil</span><span>Inter</span>
+  <!-- MARQUEE STRIP -->
+  <section class="border-y border-glass bg-surface-container-lowest py-6 space-y-3" aria-label="Destaques do Adoo">
+    <div class="marquee" data-velocity-skew>
+      <div class="marquee-track gap-10 text-2xl sm:text-3xl font-bold tracking-tight text-onsurface">
+        <span>Contas ilimitadas</span><span class="text-primary">✦</span><span>Cartões de crédito</span><span class="text-primary">✦</span><span>Orçamentos</span><span class="text-primary">✦</span><span>Offline-first</span><span class="text-primary">✦</span><span>Contas compartilhadas</span><span class="text-primary">✦</span><span>Dashboard</span><span class="text-primary">✦</span>
+      </div>
+    </div>
+    <div class="marquee reverse" data-velocity-skew>
+      <div class="marquee-track gap-10 text-sm font-medium uppercase tracking-[.3em] text-onsurface-variant">
+        <span>Sincronização em tempo real</span><span>·</span><span>Leitura de notificações bancárias</span><span>·</span><span>Importação de CSV</span><span>·</span><span>Sem anúncios</span><span>·</span><span>Firebase seguro</span><span>·</span><span>Parcelamentos</span><span>·</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO REEL -->
+  <section id="demo" class="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-20 overflow-hidden">
+    <div class="mx-auto max-w-7xl">
+      <div class="text-center max-w-3xl mx-auto">
+        <span data-reveal class="text-xs font-semibold tracking-widest uppercase text-secondary">Demo · 30 segundos</span>
+        <h2 data-scrub class="mt-4 text-4xl sm:text-6xl font-bold tracking-tighter text-onsurface">Veja o Adoo em ação.</h2>
+        <p data-reveal class="mt-4 text-lg text-onsurface-variant">Saldo, contas, cartões, orçamentos e análises — tudo em menos de um minuto.</p>
+      </div>
+      <div class="reel-stage mt-14">
+        <div class="reel-frame mx-auto max-w-6xl" id="reel">
+          <video id="reel-video" muted loop playsinline preload="metadata"
+                 poster="assets/video/adoo-reel-poster.jpg"
+                 data-src-wide="assets/video/adoo-reel.mp4" data-poster-wide="assets/video/adoo-reel-poster.jpg"
+                 data-src-tall="assets/video/adoo-reel-vertical.mp4" data-poster-tall="assets/video/adoo-reel-vertical-poster.jpg"
+                 aria-label="Vídeo de demonstração do app Adoo"></video>
+          <button type="button" class="reel-sound" id="reel-sound" aria-pressed="false">
+            <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="lbl">Ativar som</span>
+          </button>
+        </div>
       </div>
     </div>
   </section>
@@ -279,54 +458,54 @@
   <section id="recursos" class="py-24 px-4 sm:px-6 lg:px-20">
     <div class="mx-auto max-w-7xl">
       <div class="max-w-2xl">
-        <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-onsurface">Feito para quem exige precisão</h2>
-        <p class="mt-4 text-lg text-onsurface-variant leading-relaxed">Cada recurso do Adoo foi pensado para eliminar ruído e entregar clareza absoluta sobre sua vida financeira.</p>
+        <h2 data-scrub class="text-3xl sm:text-5xl font-bold tracking-tighter text-onsurface">Feito para quem exige precisão</h2>
+        <p data-reveal class="mt-4 text-lg text-onsurface-variant leading-relaxed">Cada recurso do Adoo foi pensado para eliminar ruído e entregar clareza absoluta sobre sua vida financeira.</p>
       </div>
 
-      <div class="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="feature-grid mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        <div class="rounded-xl glass-border bg-surface-container p-6 inner-glow hover:border-primary/40 transition-colors">
-          <div class="w-11 h-11 rounded-md bg-primary-soft flex items-center justify-center text-primary mb-4">
+        <div class="spot rounded-xl glass-border bg-surface-container p-6 inner-glow">
+          <div class="icon w-11 h-11 rounded-md bg-primary-soft flex items-center justify-center text-primary mb-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
           </div>
           <h3 class="text-lg font-semibold text-onsurface">Contas ilimitadas</h3>
           <p class="mt-2 text-sm text-onsurface-variant leading-relaxed">Consolide contas bancárias, carteiras digitais e dinheiro em espécie em um único painel unificado.</p>
         </div>
 
-        <div class="rounded-xl glass-border bg-surface-container p-6 inner-glow hover:border-primary/40 transition-colors">
-          <div class="w-11 h-11 rounded-md bg-primary-soft flex items-center justify-center text-primary mb-4">
+        <div class="spot rounded-xl glass-border bg-surface-container p-6 inner-glow">
+          <div class="icon w-11 h-11 rounded-md bg-primary-soft flex items-center justify-center text-primary mb-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V6m0 10v2"/></svg>
           </div>
           <h3 class="text-lg font-semibold text-onsurface">Cartões de crédito</h3>
           <p class="mt-2 text-sm text-onsurface-variant leading-relaxed">Acompanhe faturas, limites e parcelamentos de múltiplos cartões com precisão milimétrica.</p>
         </div>
 
-        <div class="rounded-xl glass-border bg-surface-container p-6 inner-glow hover:border-primary/40 transition-colors">
-          <div class="w-11 h-11 rounded-md bg-primary-soft flex items-center justify-center text-primary mb-4">
+        <div class="spot rounded-xl glass-border bg-surface-container p-6 inner-glow">
+          <div class="icon w-11 h-11 rounded-md bg-primary-soft flex items-center justify-center text-primary mb-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
           </div>
           <h3 class="text-lg font-semibold text-onsurface">Orçamentos por categoria</h3>
           <p class="mt-2 text-sm text-onsurface-variant leading-relaxed">Defina limites por categoria e monitore de perto sua saúde financeira em tempo real.</p>
         </div>
 
-        <div class="rounded-xl glass-border bg-surface-container p-6 inner-glow hover:border-primary/40 transition-colors">
-          <div class="w-11 h-11 rounded-md bg-primary-soft flex items-center justify-center text-primary mb-4">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0H5m14 0h2M5 21H3m14-10H9m10 0h.01M9 11h.01M9 15h.01M9 19h.01M13 15h.01M13 11h.01M13 19h.01M17 15h.01M17 11h.01M17 19h.01"/></svg>
+        <div class="spot rounded-xl glass-border bg-surface-container p-6 inner-glow">
+          <div class="icon w-11 h-11 rounded-md bg-primary-soft flex items-center justify-center text-primary mb-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
           </div>
-          <h3 class="text-lg font-semibold text-onsurface">Conexão com bancos</h3>
-          <p class="mt-2 text-sm text-onsurface-variant leading-relaxed">Via Open Finance, importe extratos automaticamente das principais instituições do Brasil.</p>
+          <h3 class="text-lg font-semibold text-onsurface">Lançamentos automáticos</h3>
+          <p class="mt-2 text-sm text-onsurface-variant leading-relaxed">O Adoo lê as notificações do seu banco e transforma cada compra em lançamento. Também importa extratos em CSV.</p>
         </div>
 
-        <div class="rounded-xl glass-border bg-surface-container p-6 inner-glow hover:border-primary/40 transition-colors">
-          <div class="w-11 h-11 rounded-md bg-primary-soft flex items-center justify-center text-primary mb-4">
+        <div class="spot rounded-xl glass-border bg-surface-container p-6 inner-glow">
+          <div class="icon w-11 h-11 rounded-md bg-primary-soft flex items-center justify-center text-primary mb-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-1a4 4 0 00-3-3.87M9 20H4v-1a4 4 0 013-3.87m6-1a4 4 0 100-8 4 4 0 000 8zm6 3v-1a4 4 0 00-3-3.87m-8 0A4 4 0 003 17v1"/></svg>
           </div>
           <h3 class="text-lg font-semibold text-onsurface">Contas compartilhadas</h3>
           <p class="mt-2 text-sm text-onsurface-variant leading-relaxed">Gerencie finanças em conjunto com parceiro(a) em tempo real, com total transparência.</p>
         </div>
 
-        <div class="rounded-xl glass-border bg-surface-container p-6 inner-glow hover:border-primary/40 transition-colors">
-          <div class="w-11 h-11 rounded-md bg-primary-soft flex items-center justify-center text-primary mb-4">
+        <div class="spot rounded-xl glass-border bg-surface-container p-6 inner-glow">
+          <div class="icon w-11 h-11 rounded-md bg-primary-soft flex items-center justify-center text-primary mb-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/></svg>
           </div>
           <h3 class="text-lg font-semibold text-onsurface">Análises e dashboard</h3>
@@ -338,15 +517,15 @@
   </section>
 
   <!-- SECURITY / OFFLINE-FIRST -->
-  <section id="seguranca" class="py-24 px-4 sm:px-6 lg:px-20 bg-surface-container-lowest border-y border-glass">
+  <section id="seguranca" class="py-24 px-4 sm:px-6 lg:px-20 bg-surface-container-lowest border-y border-glass overflow-hidden">
     <div class="mx-auto max-w-7xl grid lg:grid-cols-2 gap-16 items-center">
       <div>
-        <span class="text-xs font-semibold tracking-widest uppercase text-secondary">Arquitetura offline-first</span>
-        <h2 class="mt-4 text-3xl sm:text-4xl font-bold tracking-tight text-onsurface">Desempenho e segurança sem concessões</h2>
-        <p class="mt-4 text-lg text-onsurface-variant leading-relaxed">
+        <span data-reveal class="text-xs font-semibold tracking-widest uppercase text-secondary">Arquitetura offline-first</span>
+        <h2 data-scrub class="mt-4 text-3xl sm:text-5xl font-bold tracking-tighter text-onsurface">Desempenho e segurança sem concessões</h2>
+        <p data-reveal class="mt-4 text-lg text-onsurface-variant leading-relaxed">
           Construído sobre uma arquitetura DDD/EDD, o Adoo funciona perfeitamente mesmo sem conexão, sincronizando seus dados de forma segura assim que a internet voltar.
         </p>
-        <ul class="mt-8 space-y-4">
+        <ul class="sec-list mt-8 space-y-4">
           <li class="flex items-start gap-3">
             <svg class="w-5 h-5 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 10-8 0v4h8z"/></svg>
             <span class="text-onsurface-variant"><strong class="text-onsurface font-medium">Autenticação Firebase</strong> com login seguro via e-mail ou Google.</span>
@@ -361,23 +540,26 @@
           </li>
         </ul>
       </div>
-      <div class="relative">
+      <div class="relative sec-visual">
         <div class="absolute -inset-6 rounded-[2rem] bg-secondary-soft blur-3xl"></div>
         <div class="relative rounded-xl glass-border bg-surface-container inner-glow p-8 shadow-glow">
-          <div class="flex items-center gap-2 mb-6">
-            <span class="w-2 h-2 rounded-full bg-primary"></span>
-            <span class="text-xs uppercase tracking-widest text-onsurface-variant font-medium">Status de sincronização</span>
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-2">
+              <span class="ping w-2 h-2 rounded-full bg-primary"></span>
+              <span class="text-xs uppercase tracking-widest text-onsurface-variant font-medium">Status de sincronização</span>
+            </div>
+            <svg class="w-4 h-4 text-primary spin-slow" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" d="M4 4v5h5M20 20v-5h-5M5.6 15a7 7 0 0 0 12.3 2M18.4 9A7 7 0 0 0 6.1 7"/></svg>
           </div>
           <div class="space-y-4">
-            <div class="flex items-center justify-between text-sm">
+            <div class="sync-row flex items-center justify-between text-sm">
               <span class="text-onsurface-variant">Firestore</span>
               <span class="text-primary font-medium">Conectado</span>
             </div>
-            <div class="flex items-center justify-between text-sm">
+            <div class="sync-row flex items-center justify-between text-sm">
               <span class="text-onsurface-variant">Modo offline</span>
               <span class="text-onsurface font-medium">Disponível</span>
             </div>
-            <div class="flex items-center justify-between text-sm">
+            <div class="sync-row flex items-center justify-between text-sm">
               <span class="text-onsurface-variant">Última sincronização</span>
               <span class="text-onsurface font-medium">agora mesmo</span>
             </div>
@@ -390,22 +572,22 @@
   <!-- TESTIMONIALS -->
   <section class="py-24 px-4 sm:px-6 lg:px-20">
     <div class="mx-auto max-w-7xl">
-      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-onsurface text-center">O que dizem os usuários</h2>
-      <div class="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <h2 data-scrub class="text-3xl sm:text-5xl font-bold tracking-tighter text-onsurface text-center">O que dizem os usuários</h2>
+      <div class="testi-grid mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        <figure class="rounded-xl glass-border bg-surface-container p-6 inner-glow">
+        <figure class="spot rounded-xl glass-border bg-surface-container p-6 inner-glow">
           <div class="flex gap-1 text-primary mb-4" aria-hidden="true">★★★★★</div>
           <blockquote class="text-onsurface-variant leading-relaxed">"Finalmente um app financeiro sem excesso de cores e gamificação. O Adoo parece feito para adultos que levam dinheiro a sério."</blockquote>
           <figcaption class="mt-4 text-sm font-medium text-onsurface">Rafael M. <span class="text-onsurface-variant font-normal">— Engenheiro de Software</span></figcaption>
         </figure>
 
-        <figure class="rounded-xl glass-border bg-surface-container p-6 inner-glow">
+        <figure class="spot rounded-xl glass-border bg-surface-container p-6 inner-glow">
           <div class="flex gap-1 text-primary mb-4" aria-hidden="true">★★★★★</div>
           <blockquote class="text-onsurface-variant leading-relaxed">"A sincronização de contas compartilhadas com meu marido mudou completamente como organizamos as finanças da casa."</blockquote>
           <figcaption class="mt-4 text-sm font-medium text-onsurface">Camila S. <span class="text-onsurface-variant font-normal">— Consultora Financeira</span></figcaption>
         </figure>
 
-        <figure class="rounded-xl glass-border bg-surface-container p-6 inner-glow">
+        <figure class="spot rounded-xl glass-border bg-surface-container p-6 inner-glow">
           <div class="flex gap-1 text-primary mb-4" aria-hidden="true">★★★★★</div>
           <blockquote class="text-onsurface-variant leading-relaxed">"Funciona offline perfeitamente. Já usei em viagens sem sinal e nunca perdi um lançamento."</blockquote>
           <figcaption class="mt-4 text-sm font-medium text-onsurface">Diego T. <span class="text-onsurface-variant font-normal">— Empreendedor</span></figcaption>
@@ -419,13 +601,13 @@
   <section id="planos" class="py-24 px-4 sm:px-6 lg:px-20 bg-surface-container-lowest border-y border-glass">
     <div class="mx-auto max-w-7xl">
       <div class="text-center max-w-2xl mx-auto">
-        <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-onsurface">Planos simples e transparentes</h2>
-        <p class="mt-4 text-lg text-onsurface-variant">Comece de graça. Faça upgrade quando precisar de mais poder.</p>
+        <h2 data-scrub class="text-3xl sm:text-5xl font-bold tracking-tighter text-onsurface">Planos simples e transparentes</h2>
+        <p data-reveal class="mt-4 text-lg text-onsurface-variant">Comece de graça. Faça upgrade quando precisar de mais poder.</p>
       </div>
 
-      <div class="mt-14 grid sm:grid-cols-2 gap-8 max-w-3xl mx-auto">
+      <div class="price-grid mt-14 grid sm:grid-cols-2 gap-8 max-w-3xl mx-auto">
 
-        <div class="rounded-xl glass-border bg-surface-container p-8 inner-glow flex flex-col">
+        <div class="spot rounded-xl glass-border bg-surface-container p-8 inner-glow flex flex-col">
           <h3 class="text-lg font-semibold text-onsurface">Free</h3>
           <p class="mt-2 text-sm text-onsurface-variant">Para começar a organizar suas finanças.</p>
           <p class="mt-6 text-4xl font-bold tracking-tight text-onsurface">R$ 0<span class="text-base font-normal text-onsurface-variant">/mês</span></p>
@@ -438,11 +620,11 @@
           <a href="https://play.google.com/store/apps/details?id=br.com.jung.gestorfinanceiro" class="mt-8 inline-flex items-center justify-center rounded-lg glass-border text-onsurface font-semibold px-6 py-3 hover:border-primary hover:text-primary transition-colors">Começar gratuitamente</a>
         </div>
 
-        <div class="relative rounded-xl border-2 border-primary bg-surface-container p-8 shadow-glow flex flex-col">
+        <div class="conic rounded-xl bg-surface-container p-8 shadow-glow flex flex-col">
           <span class="absolute -top-3 left-8 rounded-full gradient-primary text-onprimary text-xs font-semibold px-3 py-1">Recomendado</span>
           <h3 class="text-lg font-semibold text-onsurface">Adoo Pro</h3>
           <p class="mt-2 text-sm text-onsurface-variant">Todo o poder do Adoo, sem limites.</p>
-          <p class="mt-6 text-4xl font-bold tracking-tight text-onsurface">R$ 19,90<span class="text-base font-normal text-onsurface-variant">/mês</span></p>
+          <p class="mt-6 text-4xl font-bold tracking-tight text-onsurface tabular-nums">R$ <span data-count="19.90" data-decimals="2">19,90</span><span class="text-base font-normal text-onsurface-variant">/mês</span></p>
           <ul class="mt-6 space-y-3 text-sm text-onsurface-variant flex-1">
             <li class="flex gap-2"><span class="text-primary">✓</span> Contas ilimitadas</li>
             <li class="flex gap-2"><span class="text-primary">✓</span> Cartões de crédito ilimitados</li>
@@ -452,7 +634,7 @@
             <li class="flex gap-2"><span class="text-primary">✓</span> Importação de CSV</li>
             <li class="flex gap-2"><span class="text-primary">✓</span> Sem anúncios</li>
           </ul>
-          <a href="https://play.google.com/store/apps/details?id=br.com.jung.gestorfinanceiro" class="mt-8 inline-flex items-center justify-center rounded-lg gradient-primary inner-glow text-onprimary font-semibold px-6 py-3 hover:opacity-90 transition-opacity">Assinar Adoo Pro</a>
+          <a href="https://play.google.com/store/apps/details?id=br.com.jung.gestorfinanceiro" class="magnetic mt-8 inline-flex items-center justify-center rounded-lg gradient-primary inner-glow text-onprimary font-semibold px-6 py-3 hover:opacity-90 transition-opacity">Assinar Adoo Pro</a>
         </div>
 
       </div>
@@ -462,17 +644,17 @@
   <!-- FAQ -->
   <section id="faq" class="py-24 px-4 sm:px-6 lg:px-20">
     <div class="mx-auto max-w-3xl">
-      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-onsurface text-center">Perguntas frequentes</h2>
+      <h2 data-scrub class="text-3xl sm:text-5xl font-bold tracking-tighter text-onsurface text-center">Perguntas frequentes</h2>
 
-      <div class="mt-12 space-y-3" itemscope itemtype="https://schema.org/FAQPage">
+      <div class="faq-list mt-12 space-y-3" itemscope itemtype="https://schema.org/FAQPage">
 
         <details class="group rounded-xl glass-border bg-surface-container p-6" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
           <summary class="flex items-center justify-between cursor-pointer font-semibold text-onsurface" itemprop="name">
             O Adoo funciona sem internet?
             <svg class="chev w-4 h-4 text-onsurface-variant" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
           </summary>
-          <div class="mt-3 text-sm text-onsurface-variant leading-relaxed" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-            <p itemprop="text">Sim. O Adoo é construído com arquitetura offline-first: você pode registrar transações, consultar orçamentos e navegar pelo dashboard sem conexão. Tudo é sincronizado automaticamente quando a internet retorna.</p>
+          <div class="answer text-sm text-onsurface-variant leading-relaxed" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p class="pt-3" itemprop="text">Sim. O Adoo é construído com arquitetura offline-first: você pode registrar transações, consultar orçamentos e navegar pelo dashboard sem conexão. Tudo é sincronizado automaticamente quando a internet retorna.</p>
           </div>
         </details>
 
@@ -481,18 +663,18 @@
             Meus dados financeiros estão seguros?
             <svg class="chev w-4 h-4 text-onsurface-variant" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
           </summary>
-          <div class="mt-3 text-sm text-onsurface-variant leading-relaxed" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-            <p itemprop="text">Sim. Utilizamos autenticação Firebase e regras de segurança estritas no Firestore para garantir que apenas você (ou quem você autorizar em uma conta compartilhada) tenha acesso aos seus dados.</p>
+          <div class="answer text-sm text-onsurface-variant leading-relaxed" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p class="pt-3" itemprop="text">Sim. Utilizamos autenticação Firebase e regras de segurança estritas no Firestore para garantir que apenas você (ou quem você autorizar em uma conta compartilhada) tenha acesso aos seus dados.</p>
           </div>
         </details>
 
         <details class="group rounded-xl glass-border bg-surface-container p-6" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
           <summary class="flex items-center justify-between cursor-pointer font-semibold text-onsurface" itemprop="name">
-            Posso conectar diretamente com meu banco?
+            Preciso lançar tudo manualmente?
             <svg class="chev w-4 h-4 text-onsurface-variant" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
           </summary>
-          <div class="mt-3 text-sm text-onsurface-variant leading-relaxed" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-            <p itemprop="text">Sim. O Adoo se integra ao Open Finance para importar extratos automaticamente das principais instituições financeiras do Brasil, eliminando a digitação manual.</p>
+          <div class="answer text-sm text-onsurface-variant leading-relaxed" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p class="pt-3" itemprop="text">Não. No Adoo Pro, o app lê automaticamente as notificações do seu banco e transforma cada compra em um lançamento. Você também pode importar extratos em CSV para trazer seu histórico de uma só vez.</p>
           </div>
         </details>
 
@@ -501,8 +683,8 @@
             Como funciona a conta compartilhada?
             <svg class="chev w-4 h-4 text-onsurface-variant" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
           </summary>
-          <div class="mt-3 text-sm text-onsurface-variant leading-relaxed" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-            <p itemprop="text">Assinantes Adoo Pro podem convidar um parceiro para uma conta conjunta. Todas as transações, orçamentos e saldos são sincronizados em tempo real entre os dois dispositivos.</p>
+          <div class="answer text-sm text-onsurface-variant leading-relaxed" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p class="pt-3" itemprop="text">Assinantes Adoo Pro podem convidar um parceiro para uma conta conjunta. Todas as transações, orçamentos e saldos são sincronizados em tempo real entre os dois dispositivos.</p>
           </div>
         </details>
 
@@ -511,8 +693,8 @@
             Posso cancelar minha assinatura quando quiser?
             <svg class="chev w-4 h-4 text-onsurface-variant" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
           </summary>
-          <div class="mt-3 text-sm text-onsurface-variant leading-relaxed" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-            <p itemprop="text">Sim. Você pode gerenciar, alterar ou cancelar sua assinatura Adoo Pro diretamente no app, sem burocracia.</p>
+          <div class="answer text-sm text-onsurface-variant leading-relaxed" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p class="pt-3" itemprop="text">Sim. Você pode gerenciar, alterar ou cancelar sua assinatura Adoo Pro diretamente no app, sem burocracia.</p>
           </div>
         </details>
 
@@ -521,21 +703,25 @@
   </section>
 
   <!-- CTA / DOWNLOAD -->
-  <section id="download" class="py-24 px-4 sm:px-6 lg:px-20">
-    <div class="mx-auto max-w-5xl rounded-2xl glass-border bg-surface-container inner-glow shadow-glow p-10 sm:p-16 text-center relative overflow-hidden">
+  <section id="download" class="relative py-24 px-4 sm:px-6 lg:px-20 overflow-hidden">
+    <div class="giant-wrap pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 -z-10 select-none" aria-hidden="true">
+      <div class="giant" id="giant">Adoo<span class="fill">Adoo</span>Adoo<span class="fill">Adoo</span>Adoo</div>
+    </div>
+    <div class="cta-card mx-auto max-w-5xl rounded-2xl glass-border bg-surface-container inner-glow shadow-glow p-10 sm:p-16 text-center relative overflow-hidden isolate">
       <div class="absolute inset-0 -z-10 gradient-primary opacity-10"></div>
-      <img src="icon.png" alt="Ícone do Adoo" width="64" height="64" class="w-16 h-16 mx-auto rounded-2xl shadow-glow" />
-      <h2 class="mt-6 text-3xl sm:text-4xl font-bold tracking-tight text-onsurface">Comece a dominar suas finanças hoje</h2>
-      <p class="mt-4 text-lg text-onsurface-variant max-w-xl mx-auto">Baixe o Adoo gratuitamente e tenha clareza total sobre contas, cartões e orçamentos em minutos.</p>
-      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-        <a href="https://play.google.com/store/apps/details?id=br.com.jung.gestorfinanceiro" aria-label="Baixar na Google Play" class="inline-flex items-center gap-3 rounded-lg glass-border bg-surface-container-high px-5 py-3 hover:border-primary transition-colors">
+      <div class="aurora" aria-hidden="true"><i></i><i></i></div>
+      <img src="icon.png" alt="Ícone do Adoo" width="64" height="64" class="cta-icon float w-16 h-16 mx-auto rounded-2xl shadow-glow" />
+      <h2 data-scrub class="mt-6 text-3xl sm:text-5xl font-bold tracking-tighter text-onsurface">Comece a dominar suas finanças hoje</h2>
+      <p data-reveal class="mt-4 text-lg text-onsurface-variant max-w-xl mx-auto">Baixe o Adoo gratuitamente e tenha clareza total sobre contas, cartões e orçamentos em minutos.</p>
+      <div class="cta-buttons mt-8 flex flex-wrap items-center justify-center gap-4">
+        <a href="https://play.google.com/store/apps/details?id=br.com.jung.gestorfinanceiro" aria-label="Baixar na Google Play" class="magnetic inline-flex items-center gap-3 rounded-lg glass-border bg-surface-container-high px-5 py-3 hover:border-primary transition-colors">
           <svg class="w-6 h-6 text-onsurface" fill="currentColor" viewBox="0 0 24 24"><path d="M3 20.5v-17c0-.6.32-1.15.83-1.44l10.36 9.44-10.36 9.44a1.63 1.63 0 0 1-.83-1.44zM14.87 12l2.51-2.28 3.31 1.91c.85.49.85 1.66 0 2.15l-3.31 1.91L14.87 12zM4.7 1.7l9.4 8.55 2.35-2.14L6.05 1.02c-.35-.2-.86-.13-1.35.68zm0 20.6c.49.81 1 .88 1.35.68l10.4-7.09-2.35-2.14L4.7 22.3z"/></svg>
           <span class="text-left text-sm">
             <span class="block text-xs text-onsurface-variant">Disponível no</span>
             <span class="block font-semibold text-onsurface">Google Play</span>
           </span>
         </a>
-        <a href="#" aria-label="Baixar na App Store" class="inline-flex items-center gap-3 rounded-lg glass-border bg-surface-container-high px-5 py-3 hover:border-primary transition-colors">
+        <a href="#" aria-label="Baixar na App Store" class="magnetic inline-flex items-center gap-3 rounded-lg glass-border bg-surface-container-high px-5 py-3 hover:border-primary transition-colors">
           <svg class="w-6 h-6 text-onsurface" fill="currentColor" viewBox="0 0 24 24"><path d="M17.05 12.04c-.03-2.13 1.74-3.15 1.82-3.2-1-1.44-2.55-1.64-3.1-1.66-1.4-.14-2.73.83-3.44.83-.72 0-1.83-.81-3-.79-1.55.02-2.98.9-3.77 2.28-1.62 2.79-.41 6.9 1.14 9.17.76 1.11 1.66 2.35 2.84 2.31 1.14-.04 1.57-.74 2.95-.74 1.38 0 1.77.74 2.98.72 1.23-.02 2.02-1.12 2.77-2.24.87-1.29 1.23-2.55 1.25-2.62-.03-.01-2.39-.92-2.44-3.06zM14.86 3.6c.66-.8 1.1-1.9.98-3-.94.04-2.1.63-2.78 1.42-.6.7-1.13 1.83-.99 2.9 1.05.08 2.13-.53 2.79-1.32z"/></svg>
           <span class="text-left text-sm">
             <span class="block text-xs text-onsurface-variant">Disponível na</span>
@@ -587,11 +773,24 @@
     (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'dark');
   applyTheme(saved);
 
+  // Circular reveal from the toggle button (View Transitions API), plain swap as fallback.
   toggle.addEventListener('click', () => {
-    const isDark = root.classList.contains('dark');
-    applyTheme(isDark ? 'light' : 'dark');
+    const next = root.classList.contains('dark') ? 'light' : 'dark';
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!document.startViewTransition || reduce) { applyTheme(next); return; }
+    const r = toggle.getBoundingClientRect();
+    const x = r.left + r.width / 2, y = r.top + r.height / 2;
+    const end = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    document.startViewTransition(() => applyTheme(next)).ready.then(() => {
+      root.animate({ clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${end}px at ${x}px ${y}px)`] },
+        { duration: 700, easing: 'cubic-bezier(.7,0,.2,1)', pseudoElement: '::view-transition-new(root)' });
+    });
   });
 </script>
+<script src="assets/js/gsap.min.js" defer></script>
+<script src="assets/js/ScrollTrigger.min.js" defer></script>
+<script src="assets/js/lenis.min.js" defer></script>
+<script src="assets/js/main.js" defer></script>
 
 </body>
 </html>
