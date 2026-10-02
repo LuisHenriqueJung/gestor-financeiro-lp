@@ -129,6 +129,26 @@
   html.js .reveal { opacity: 0; transform: translateY(12px); transition: opacity .6s ease, transform .6s ease; }
   html.js .reveal.in { opacity: 1; transform: none; }
 
+  /* Cenas animadas dos mockups. O estado final é o do HTML; o main.js reinicia e anima. */
+  .fold { display: grid; grid-template-rows: 1fr; opacity: 1; transition: grid-template-rows .45s cubic-bezier(.2,.8,.2,1), opacity .35s ease, margin .45s ease; }
+  .fold > * { overflow: hidden; min-height: 0; }
+  .fold.off { grid-template-rows: 0fr; opacity: 0; margin-top: 0 !important; }
+  .soft { transition: opacity .35s ease, transform .35s ease; }
+  .soft.off { opacity: 0; transform: translateY(4px); }
+  .chip { transition: background-color .2s ease, color .2s ease, border-color .2s ease; }
+  .chip.on { background-color: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+  .press { transition: transform .15s ease, opacity .2s ease; }
+  .press.down { transform: scale(.96); }
+  .press.idle { opacity: .45; }
+  .caret { display: inline-block; width: 2px; height: .9em; margin-left: 3px; vertical-align: -0.08em; background: var(--primary); opacity: 0; }
+  .typing .caret { animation: blink 1s steps(1) infinite; opacity: 1; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .bar { height: 4px; border-radius: 999px; background: var(--surface-container-high); overflow: hidden; }
+  .bar > i { display: block; height: 100%; width: 100%; background: var(--primary); transform-origin: left; transition: transform 1.4s cubic-bezier(.4,0,.2,1); }
+  .bar.off > i { transform: scaleX(0); transition: none; }
+  .flash { animation: flash 1.2s ease; }
+  @keyframes flash { 0% { background-color: var(--partner-soft); } 100% { background-color: transparent; } }
+
   @media (prefers-reduced-motion: reduce) {
     html.js .reveal { opacity: 1; transform: none; transition: none; }
     details summary .chev { transition: none; }
@@ -187,26 +207,32 @@
       </div>
 
       <!-- Mockup: anotar um gasto -->
-      <div class="mx-auto w-full max-w-sm" aria-hidden="true">
+      <div id="scene-entry" class="mx-auto w-full max-w-sm" aria-hidden="true">
         <div class="rounded-xl bordered bg-surface p-6">
           <p class="text-sm text-onsurface-variant">Novo gasto</p>
-          <p class="mt-2 text-4xl font-bold tracking-tight tabular-nums text-onsurface">R$ 32,90</p>
+          <p class="mt-2 text-4xl font-bold tracking-tight tabular-nums text-onsurface"><span data-el="value">R$ 32,90</span><span class="caret"></span></p>
           <div class="mt-5 flex flex-wrap gap-2 text-sm">
-            <span class="rounded-full bg-primary text-onprimary px-3 py-1.5 font-medium">Mercado</span>
-            <span class="rounded-full bordered px-3 py-1.5 text-onsurface-variant">Transporte</span>
-            <span class="rounded-full bordered px-3 py-1.5 text-onsurface-variant">Lazer</span>
-            <span class="rounded-full bordered px-3 py-1.5 text-onsurface-variant">Casa</span>
+            <span data-el="chip" class="chip on rounded-full bordered px-3 py-1.5 font-medium text-onsurface-variant">Mercado</span>
+            <span class="chip rounded-full bordered px-3 py-1.5 text-onsurface-variant">Transporte</span>
+            <span class="chip rounded-full bordered px-3 py-1.5 text-onsurface-variant">Lazer</span>
+            <span class="chip rounded-full bordered px-3 py-1.5 text-onsurface-variant">Casa</span>
           </div>
           <div class="mt-5 flex items-center justify-between rounded-md bg-surface-container px-4 py-3 text-sm">
             <span class="text-onsurface-variant">Conta</span>
             <span class="font-medium text-onsurface">Nubank</span>
           </div>
-          <div class="mt-5 rounded-lg bg-primary text-onprimary text-center font-semibold py-3">Salvar</div>
+          <div data-el="save" class="press mt-5 rounded-lg bg-primary text-onprimary text-center font-semibold py-3">Salvar</div>
+          <div data-el="toast" class="soft mt-4">
+            <div><p class="flex items-center justify-center gap-2 text-sm font-medium text-primary">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              Gasto anotado em 4 segundos
+            </p></div>
+          </div>
         </div>
         <div class="mt-4 rounded-xl bordered bg-surface p-5 flex flex-wrap items-center justify-between gap-3">
           <div>
             <p class="text-sm text-onsurface-variant">Gastos em outubro</p>
-            <p class="mt-1 text-xl font-bold tabular-nums whitespace-nowrap text-onsurface">R$ 1.842,30</p>
+            <p data-el="total" data-from="1842.30" data-to="1875.20" class="mt-1 text-xl font-bold tabular-nums whitespace-nowrap text-onsurface">R$ 1.875,20</p>
           </div>
           <span class="rounded-full bg-primary-soft text-primary text-xs font-semibold px-3 py-1 whitespace-nowrap">12% a menos que setembro</span>
         </div>
@@ -244,13 +270,41 @@
           <p class="mt-2 text-onsurface-variant leading-relaxed">O Adoo mostra se você está gastando mais que no mês passado antes de a fatura chegar.</p>
         </div>
       </div>
-      <div class="reveal mt-6 rounded-xl bordered bg-surface p-6 sm:p-8 flex flex-col md:flex-row md:items-center gap-6">
+      <div class="reveal mt-6 rounded-xl bordered bg-surface p-6 sm:p-8 grid md:grid-cols-[auto_1fr_20rem] md:items-center gap-6">
         <div class="w-10 h-10 flex-shrink-0 rounded-md bg-primary-soft flex items-center justify-center text-primary">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
         </div>
         <div class="flex-1">
           <h3 class="text-lg font-semibold text-onsurface">Não precisa ser tudo na mão.</h3>
           <p class="mt-2 text-onsurface-variant leading-relaxed">No Adoo Pro, o app entende as notificações de compra do seu banco e já prepara o lançamento. Você também pode importar seus extratos em CSV. Em qualquer caso, você confere antes de salvar e continua sabendo de cada gasto.</p>
+        </div>
+
+        <!-- Mockup: notificação vira lançamento; CSV importado -->
+        <div id="scene-auto" class="text-sm min-h-[15rem]" aria-hidden="true">
+          <div data-el="notif" class="fold">
+            <div><div class="rounded-lg bordered bg-surface-low p-3">
+              <div class="flex items-center justify-between text-xs text-onsurface-variant"><span class="font-semibold text-onsurface">Seu banco</span><span>agora</span></div>
+              <p class="mt-1 text-onsurface">Compra aprovada: R$ 54,90 em Padaria Central</p>
+            </div></div>
+          </div>
+          <div data-el="draft" class="fold mt-2">
+            <div><div class="rounded-lg border border-[var(--primary)] bg-surface p-3 flex items-center justify-between gap-3">
+              <div>
+                <p class="font-medium text-onsurface">Padaria Central</p>
+                <p class="text-xs text-onsurface-variant">Alimentação · R$ 54,90</p>
+              </div>
+              <span data-el="confirm" class="press rounded-md bg-primary text-onprimary text-xs font-semibold px-3 py-1.5 whitespace-nowrap">✓ Salvo</span>
+            </div></div>
+          </div>
+          <div data-el="csv" class="fold mt-2">
+            <div><div class="rounded-lg bordered bg-surface-low p-3">
+              <div class="flex items-center justify-between gap-3">
+                <span class="font-medium text-onsurface">extrato-setembro.csv</span>
+                <span data-el="csvtxt" class="text-xs text-primary font-semibold whitespace-nowrap">38 lançamentos</span>
+              </div>
+              <div data-el="csvbar" class="bar mt-2"><i></i></div>
+            </div></div>
+          </div>
         </div>
       </div>
     </div>
@@ -284,7 +338,7 @@
       </div>
 
       <!-- Mockup: conta do casal -->
-      <div class="reveal mx-auto w-full max-w-sm" aria-hidden="true">
+      <div id="scene-couple" class="reveal mx-auto w-full max-w-sm min-h-[30rem]" aria-hidden="true">
         <div class="rounded-xl bordered bg-surface p-6">
           <div class="flex items-center justify-between">
             <div class="flex -space-x-2">
@@ -294,8 +348,18 @@
             <span class="text-sm text-onsurface-variant">Você e Ana</span>
           </div>
           <p class="mt-5 text-sm text-onsurface-variant">Gastos da casa em outubro</p>
-          <p class="mt-1 text-3xl font-bold tracking-tight tabular-nums text-onsurface">R$ 3.214,50</p>
+          <p data-el="total" data-from="3214.50" data-to="3238.00" class="mt-1 text-3xl font-bold tracking-tight tabular-nums text-onsurface">R$ 3.238,00</p>
           <div class="mt-6 divide-y divide-[var(--border)] text-sm">
+            <div data-el="newrow" class="fold">
+              <div><div data-el="newrow-inner" class="flex items-center justify-between py-3 -mx-2 px-2 rounded-md">
+                <div class="flex items-center gap-3">
+                  <span class="w-7 h-7 rounded-full bg-partner-soft text-partner flex items-center justify-center text-xs font-bold">A</span>
+                  <span class="text-onsurface">Padaria</span>
+                  <span class="text-xs font-medium text-partner">Ana anotou agora</span>
+                </div>
+                <span class="tabular-nums text-onsurface">R$ 23,50</span>
+              </div></div>
+            </div>
             <div class="flex items-center justify-between py-3">
               <div class="flex items-center gap-3">
                 <span class="w-7 h-7 rounded-full bg-primary-soft text-primary flex items-center justify-center text-xs font-bold">V</span>
@@ -318,9 +382,11 @@
               <span class="tabular-nums text-onsurface">R$ 187,00</span>
             </div>
           </div>
-          <div class="mt-3 rounded-md bg-partner-soft px-4 py-3 text-sm">
-            <p class="font-medium text-partner">Ana sinalizou “Mercado”</p>
-            <p class="mt-0.5 text-onsurface-variant">“Esse não foi R$ 248?”</p>
+          <div data-el="flag" class="fold mt-3">
+            <div><div class="rounded-md bg-partner-soft px-4 py-3 text-sm">
+              <p class="font-medium text-partner">Ana sinalizou “Mercado”</p>
+              <p class="mt-0.5 text-onsurface-variant">“Esse não foi R$ 248?”</p>
+            </div></div>
           </div>
         </div>
       </div>
